@@ -3,11 +3,15 @@
 #include <string.h>
 #include <ctype.h>
 #include "../headers/lex.h"
+
+Token *token;
+
 void lexer_init(){
+	token = calloc(1, sizeof(Token));
     lexer=calloc(1,sizeof(Lexer));
 }
 void get_next_car()
-{   
+{
     if (Putback)
 	{
 		lexer->c = Putback;
@@ -19,7 +23,6 @@ void get_next_car()
 
 Token *token_init(CODE_LEX code, char *value)
 {
-	Token *token = calloc(1, sizeof(Token));
 	token->code = code;
 	token->value = value;
 	return token;
@@ -74,7 +77,7 @@ Token* lexer_get_next_token(){
             case 'd':
                     return token_init(TOKEN_D,lexer_get_caracter_as_string());
                     break;
-            case EOF :         
+            case EOF :
                     return token_init(TOKEN_EOF,"EOF");
                     break;
             default:{
@@ -130,8 +133,8 @@ Token* lexer_get_next_token(){
 		}
 
 
-            }  
-            
+            }
+
 
 
     }
@@ -147,7 +150,7 @@ void lexer_scan_file(){
 	}
 }
 void skip_whitespace(){
-    
+
 	get_next_car();
     //int fseeked=0;
 	while (lexer->c == '\b' || lexer->c == '\r' || lexer->c == '\f' ||lexer->c == ' ' )
@@ -158,7 +161,7 @@ void skip_whitespace(){
         //         get_next_car();
         //         cpt++;
         //     }
-            
+
         //     if(lexer->c !='\n' && fseeked==0 ){
         //       //rollback
         //       fseek(inputFile,-cpt, SEEK_CUR);
@@ -167,12 +170,11 @@ void skip_whitespace(){
         //     }
 
         // }
-        // else get_next_car();  
-        
-        get_next_car(); 
+        // else get_next_car();
+
+        get_next_car();
 	}
 
-    
 
 }
 int main(int argc, char *argv[]){

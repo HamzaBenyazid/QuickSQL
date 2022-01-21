@@ -48,6 +48,7 @@ Lexer *lexer;
 Token *token;
 FILE *inputFile;
 int Putback;
+extern Token *token;
 
 //prototypes
 void skip_whitespace();

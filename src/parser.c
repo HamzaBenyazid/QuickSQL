@@ -60,3 +60,66 @@ void table() {
     }
 }
 
+void table_directives() {
+  switch (token->code) {
+    case TOKEN_TD_COLPREFIX:
+      colprefix_directive();
+      break;
+    case TOKEN_TD_SELECT:
+      test_symbole(TOKEN_TD_SELECT);
+      break;
+  }
+}
+
+void column() {
+    test_symbole(TOKEN_WHITESPACE);
+    test_symbole(TOKEN_ID);
+    type();
+    constraint();
+    test_symbole(TOKEN_NL);
+}
+
+void colprefix_directive() {
+  next_token();
+  if(token->code == TOKEN_ID) {
+    next_token();
+  }
+}
+
+void type() {
+    for (CODE_LEX code = TOKEN_NUM; code <= TOKEN_JSON; code++) {
+      if (token->code == code) {
+        lexer_get_next_token();
+        break;
+      }
+    }
+}
+
+void constraint() {
+  switch (token->code) {
+    case TOKEN_PK:
+     test_symbole(TOKEN_PK);
+     break;
+    case TOKEN_FK:
+     fk_constraint();
+     break;
+    case TOKEN_CHECK:
+     check_constraint();
+     break;
+    case TOKEN_NN:
+     test_symbole(TOKEN_NN);
+     break;
+    case TOKEN_BETWEEN:
+     between_constraint();
+     break;
+    case TOKEN_INDEX:
+     test_symbole(TOKEN_INDEX);
+     break;
+    case TOKEN_DEFAULT:
+     default_constraint();
+     break;
+    case TOKEN_UNIQUE:
+     test_symbole(TOKEN_UNIQUE);
+     break;
+  }
+}
