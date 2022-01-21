@@ -95,7 +95,7 @@ void colprefix_directive() {
 void type() {
   for (CODE_LEX code = TOKEN_NUM; code <= TOKEN_JSON; code++) {
     if (token->code == code) {
-      lexer_get_lexer_get_next_token();
+      lexer_get_next_token();
       break;
     }
   }
