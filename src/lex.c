@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../headers/header.h"
+#include "../headers/lex.h"
 void lexer_init(){
     lexer=calloc(1,sizeof(Lexer));
 }
@@ -17,10 +17,10 @@ void get_next_car()
     lexer->c=fgetc(inputFile);
 }
 
-Token *token_init(int type, char *value)
+Token *token_init(CODE_LEX code, char *value)
 {
 	Token *token = calloc(1, sizeof(Token));
-	token->type = type;
+	token->code = code;
 	token->value = value;
 	return token;
 }

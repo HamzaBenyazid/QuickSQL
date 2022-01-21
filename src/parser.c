@@ -16,8 +16,8 @@ char* erreurs[] = {
     "ERROR_EOF", "ERROR_ERR", "ERROR_WHITESPACE", "ERROR_NUMBER", "ERROR_STRING"
 };
 
-void test_symbole(Token token) {
-    if (token != current_token) error((Error)token);
+void test_symbole(CODE_LEX code) {
+    if (code != token->code) error((Error)token);
     else next_token();
 }
 
@@ -27,11 +27,11 @@ void error(Error err) {
 }
 
 void program() {
-    if (current_token == TOKEN_ID) {
+    if (token->code == TOKEN_ID) {
         table();
         program();
     }
-    if (current_token == TOKEN_VIEW) {
+    if (token->code == TOKEN_VIEW) {
         view ();
         program();
     }
@@ -41,22 +41,21 @@ void view() {
   test_symbole(TOKEN_VIEW);
   test_symbole(TOKEN_ID);
   test_symbole(TOKEN_ID);
-  while(current_token != '\n') {
+  while(token->code != '\n') {
     test_symbole(TOKEN_ID);
   }
 }
 
 void table() {
     test_symbole(TOKEN_ID);
-    while (current_token == TOKEN_TD_COLPREFIX
-          || current_token == TOKEN_TD_SELECT)
+    while (token->code == TOKEN_TD_COLPREFIX
+          || token->code == TOKEN_TD_SELECT)
     {
         table_directives();
     }
     test_symbole(TOKEN_NL);
     column();
-    while (current_token == TOKEN_WHITESPACE)
-    {
+    while (token->code == TOKEN_WHITESPACE) {
         column();
     }
 }

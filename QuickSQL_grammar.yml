@@ -4,7 +4,7 @@ view : "view" ID ID {ID} new_line
 table_directives : colprefix_directive | select_directive | eps
 colprefix_directive : /colprefix (ID|eps)
 select_directive : /select
-column : white_space ID type constraint new_line| eps
+column : white_space ID type constraint new_line
 type :  "num"
         | "int"
         | "d"
