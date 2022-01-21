@@ -22,7 +22,7 @@ void fk_constraint();
 void check_constraint();
 void between_constraint();
 void default_constraint();
-void commant();
+void comment();
 
 
 

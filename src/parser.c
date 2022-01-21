@@ -16,7 +16,12 @@ char* erreurs[] = {
   "ERROR_EOF", "ERROR_ERR", "ERROR_WHITESPACE", "ERROR_NUMBER", "ERROR_STRING"
 };
 
+enum {
+  TRUE, FALSE
+} inComment;
+
 void test_symbole(CODE_LEX code) {
+  if (inComment == FALSE) comment();
   if (code != token->code) error((Error)token);
   else lexer_get_next_token();
 }
@@ -27,6 +32,7 @@ void error(Error err) {
 }
 
 void program() {
+  inComment = FALSE;
   if (token->code == TOKEN_ID) {
     table();
     program();
@@ -136,7 +142,7 @@ void check_constraint() {
     lexer_get_next_token();
     test_symbole(TOKEN_VALUE);
   }
-} 
+}
 
 void between_consrtraint(){
   test_symbole(TOKEN_BETWEEN);
@@ -153,5 +159,26 @@ void between_consrtraint(){
   default:
     error(TOKEN_VALUE);
     break;
+  }
+}
+
+void default_constraint() {
+  test_symbole(TOKEN_DEFAULT);
+  test_symbole(TOKEN_VALUE);
+}
+
+void comment() {
+  if (token->code == TOKEN_DOUBLE_HYPHEN) {
+    inComment = TRUE;
+    test_symbole(TOKEN_DOUBLE_HYPHEN);
+    test_symbole(TOKEN_COMMENT);
+    test_symbole(TOKEN_NL);
+    inComment = FALSE;
+  } else if (token->code == TOKEN_OPN_BRCKT) {
+    inComment = TRUE;
+    test_symbole(TOKEN_OPN_BRCKT);
+    test_symbole(TOKEN_COMMENT);
+    test_symbole(TOKEN_CLS_BRCKT);
+    inComment = FALSE;
   }
 }
