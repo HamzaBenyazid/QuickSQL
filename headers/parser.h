@@ -38,8 +38,11 @@ typedef enum {
 // tableau des erreurs:
 extern char* erreurs[];
 
+Token current_token;
+void next_token();
+
 void test_symbole(Token code);
-void erreur(Error erreur);
+void error(Error erreur);
 
 void program();
 void view();

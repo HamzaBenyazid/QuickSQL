@@ -1,10 +1,10 @@
-program : { view | table }
-table : ID table_directives {table_directives} '\n' column {'\n' column}
-view : "view" ID ID {ID}
+program : (view | table) { view | table }
+table : ID table_directives {table_directives} new_line column { column }
+view : "view" ID ID {ID} new_line
 table_directives : colprefix_directive | select_directive | eps
 colprefix_directive : /colprefix (ID|eps)
 select_directive : /select
-column : '\t' ID type constraint | eps
+column : white_space ID type constraint new_line| eps
 type :  "num"
         | "int"
         | "d"
@@ -34,4 +34,4 @@ not_null_constraint : /nn
 between_constraint : /between value value
 index_constraint : /index
 default_constraint : /default value
-comment : -- text '\n'| [ text ]
+comment : -- text new_line| [ text ]
