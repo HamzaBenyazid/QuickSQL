@@ -31,7 +31,7 @@ pk_constraint : /pk
 fk_constraint : /fk ID
 check_constraint : /check value{,value}
 not_null_constraint : /nn
-between_constraint : /between value value
+between_constraint : /between (number number | string string)
 index_constraint : /index
 default_constraint : /default value
 comment : -- text new_line| [ text ]
