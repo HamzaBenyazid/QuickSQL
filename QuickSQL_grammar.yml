@@ -1,10 +1,10 @@
-program : {view|table|query}
-table : ID {table_directives}'\n' column*
+program : { view | table }
+table : ID table_directives {table_directives} '\n' column {'\n' column}
 view : "view" ID ID {ID}
-table_directives : colprefix_directive | select_directive 
+table_directives : colprefix_directive | select_directive | eps
 colprefix_directive : /colprefix (ID|eps)
 select_directive : /select
-column : '\t' ID type {constraint} '\n' 
+column : '\t' ID type constraint | eps
 type :  "num"
         | "int"
         | "d"
@@ -22,15 +22,16 @@ constraint : pk_constraint
             | check_constraint
             | not_null_constraint
             | between_constraint
-            | constant_constraint
             | index_constraint
             | default_constraint
-
+            | unique_constraint
+            | eps
+unique_constrant: /unique
 pk_constraint : /pk 
 fk_constraint : /fk ID
 check_constraint : /check value{,value}
-not_null_constraint : /nn | /not null
+not_null_constraint : /nn
 between_constraint : /between value value
 index_constraint : /index
 default_constraint : /default value
-comment : -- text\('\n') '\n'| [ text\([|]) ]
+comment : -- text '\n'| [ text ]

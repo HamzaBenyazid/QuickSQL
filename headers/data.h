@@ -1,5 +1,6 @@
 #ifndef DATA_H
 #define DATA_H
+
 typedef enum {
     PK_TOKEN,
     FK_TOKEN,
@@ -7,7 +8,8 @@ typedef enum {
     NN_TOKEN,
     BETWEEN_TOKEN,
     INDEX_TOKEN,
-    DEFAULT_TOKEN
+    DEFAULT_TOKEN,
+    CONSTANT_TOKEN
 }ColumnDirectiveToken;
 
 typedef enum {
@@ -55,7 +57,7 @@ typedef struct{
     char** tableNames;
 }View;
 
-Table* tables;
-View* views;
+extern Table* tables;
+extern View* views;
 
 #endif
