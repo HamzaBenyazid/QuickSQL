@@ -1,0 +1,7 @@
+#########################Semantic Rules#####################################
+
+rule 1 : table names must be unique
+rule 2 : column names in a table must be unique
+rule 3 : every table directive must not be used more than one time in a table
+rule 4 : every column directive must not be used more than one time in a column
+rule 5: 

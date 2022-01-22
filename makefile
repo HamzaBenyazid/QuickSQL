@@ -1,2 +1,2 @@
 all:
-        gcc -g ./src/*.c -o lex
+	gcc -g ./src/utils.c -o lex

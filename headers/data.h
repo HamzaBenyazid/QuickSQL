@@ -1,6 +1,15 @@
 #ifndef DATA_H
 #define DATA_H
 
+#define MAX_NUM_CD 8
+#define MAX_NUM_TD 2
+#define MAX_NAME_LEN 128
+#define MAX_TAB_SIZE 10
+#define MAX_VIEWS_SIZE 10
+#define MAX_COL_SIZE 100
+#define MAX_CD_ARGS 10
+
+
 typedef enum {
     PK_TOKEN,
     FK_TOKEN,
@@ -9,7 +18,7 @@ typedef enum {
     BETWEEN_TOKEN,
     INDEX_TOKEN,
     DEFAULT_TOKEN,
-    CONSTANT_TOKEN
+    UNIQUE_TOKEN
 }ColumnDirectiveToken;
 
 typedef enum {
@@ -33,12 +42,14 @@ typedef enum {
 typedef struct{
     ColumnDirectiveToken token;
     char** arguments;
+    int numberOfArgs;
 }ColumnDirective;
 
 typedef struct{
-    char* name;
+    char name[MAX_NAME_LEN];
     ColumnType type;
-    ColumnDirective* columnDirectives;
+    ColumnDirective columnDirectives[MAX_NUM_CD];
+    int numberOfCD; //number of column directives
 } Column;
 
 typedef struct{
@@ -47,17 +58,23 @@ typedef struct{
 }TableDirective;
 
 typedef struct{
-    char* name;
-    TableDirective* tableDirectives;
+    char name[MAX_NAME_LEN];
+    TableDirective tableDirectives[MAX_NUM_TD];
+    int numberOfTD;
     Column* columns;
+    int numberOfColumns;
 }Table;
 
 typedef struct{
-    char* name;
-    char** tableNames;
+    char name[MAX_NAME_LEN];
+    char* tableNames[MAX_NAME_LEN];
+    int numberOfTableNames;
 }View;
 
-extern Table* tables;
-extern View* views;
+Table* tables;
+View* views;
+
+int numberOfTables;
+int numberOfViews;
 
 #endif
