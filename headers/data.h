@@ -8,6 +8,7 @@
 #define MAX_VIEWS_SIZE 10
 #define MAX_COL_SIZE 100
 #define MAX_CD_ARGS 10
+#define MAX_VIEW_TABS 10
 
 
 typedef enum {
@@ -67,7 +68,7 @@ typedef struct{
 
 typedef struct{
     char name[MAX_NAME_LEN];
-    char* tableNames[MAX_NAME_LEN];
+    char** tableNames;
     int numberOfTableNames;
 }View;
 

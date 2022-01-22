@@ -6,7 +6,7 @@ int numberOfViews;
 void initTablesAndViews(){
     tables = malloc(MAX_TAB_SIZE*sizeof(Table));
     numberOfTables = 0;
-    tables = malloc(MAX_VIEWS_SIZE*sizeof(Table));
+    views = malloc(MAX_VIEWS_SIZE*sizeof(View));
     numberOfViews = 0;
 }
 void freeTablesAndViews(){
@@ -14,9 +14,16 @@ void freeTablesAndViews(){
         free(tables[i].columns);
     }
     free(tables);
+    for(int i=0;i<numberOfViews;i++){
+        free(views[i].tableNames);
+    }
     free(views);
 }
-void addTableName(char tableName[5]){
+void addTableName(char* tableName){
+    if(strlen(tableName)>MAX_NAME_LEN){
+        printf("\nSemantic error : table name must not exceed 128 characters.\n");
+        exit(EXIT_FAILURE);
+    }
     if(numberOfTables==MAX_TAB_SIZE){
         //re-allocating
         tables = realloc(tables,MAX_TAB_SIZE*sizeof(Table));
@@ -53,6 +60,10 @@ void addTableDirectiveArgument(char* argument){
     *(tables+numberOfTables-1) = table;
 }
 void addColumnName(char* columnName){
+    if(strlen(columnName)>MAX_NAME_LEN){
+        printf("\nSemantic error : column name must not exceed 128 characters.\n");
+        exit(EXIT_FAILURE);
+    }
     Table table=*(tables+numberOfTables-1);
     int numberOfColumns=table.numberOfColumns;
     if(numberOfColumns==MAX_COL_SIZE){
@@ -111,6 +122,38 @@ void addColumnDirectiveArgument(char* argument){
     *(column.columnDirectives+numberOfCD-1)=columnDirective;
     *(table.columns+numberOfColumns-1)=column;
     *(tables+numberOfTables-1)=table;
+}
+void addViewName(char* viewName){
+    if(strlen(viewName)>MAX_NAME_LEN){
+        printf("\nSemantic error : view name must not exceed 128 characters.\n");
+        exit(EXIT_FAILURE);
+    }
+    if(numberOfViews==MAX_VIEWS_SIZE){
+        //re-allocating
+        views = realloc(views,MAX_VIEWS_SIZE*sizeof(View));
+    }
+    View view;
+    strcpy(view.name,viewName);
+    view.tableNames = malloc(MAX_VIEW_TABS*sizeof(char*));
+    view.numberOfTableNames=0;
+    views[numberOfViews]=view;
+    numberOfViews++;
+}
+void addViewTableName(char* tableName){
+    if(strlen(tableName)>MAX_NAME_LEN){
+        printf("\nSemantic error : table name must not exceed 128 characters.\n");
+        exit(EXIT_FAILURE);
+    }
+    View view = views[numberOfViews-1];
+    int numberOfTabNames=view.numberOfTableNames;
+    if(numberOfTabNames==MAX_VIEW_TABS){
+        //re-allocating
+        view.tableNames = realloc(view.tableNames,MAX_VIEW_TABS*sizeof(char*));
+    }
+    view.tableNames[numberOfTabNames]=malloc(MAX_NAME_LEN*sizeof(char));
+    strcpy(view.tableNames[numberOfTabNames],tableName);
+    view.numberOfTableNames++;
+    views[numberOfViews-1]=view;
 }
 ColumnType mapCodeLexToColumnType(CODE_LEX token){
     return (ColumnType)(token-TOKEN_NUM);
@@ -176,8 +219,21 @@ void printColumnDirectiveArguments(ColumnDirective columnDirective){
     }
     printf("\n");
 }
+void printView(View view){
+    printf("View : \n");
+    printf("\tname : %s \n",view.name);
+    printViewTableNames(view);
+}
+void printViewTableNames(View view){
+    printf("\tTable names :");
+    for(int i=0;i<view.numberOfTableNames;i++){
+        printf(" %s,",view.tableNames[i]);
+    }
+    printf("\n");
+}
 // void main(){
 //     Table table;
+//     View view;
 //     initTablesAndViews();
 //     addTableName("table1");
 //     addTableDirective(TOKEN_TD_SELECT);
@@ -189,9 +245,16 @@ void printColumnDirectiveArguments(ColumnDirective columnDirective){
 //     addColumnName("col2");
 //     addColumnType(TOKEN_TS);
 //     addColumnDirective(TOKEN_UNIQUE);
+//     addViewName("view1");
+//     addViewTableName("table1");
+//     addViewTableName("table2");
 //     for(int i=0;i<numberOfTables;i++){
 //         table = tables[i];
 //         printTable(table);
+//     }
+//     for(int i=0;i<numberOfViews;i++){
+//         view = views[i];
+//         printView(view);
 //     }
 // }
 
