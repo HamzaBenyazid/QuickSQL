@@ -20,10 +20,7 @@ void freeTablesAndViews(){
     free(views);
 }
 void addTableName(char* tableName){
-    if(strlen(tableName)>MAX_NAME_LEN){
-        printf("\nSemantic error : table name must not exceed 128 characters.\n");
-        exit(EXIT_FAILURE);
-    }
+    checkNameLength(tableName);
     if(numberOfTables==MAX_TAB_SIZE){
         //re-allocating
         tables = realloc(tables,MAX_TAB_SIZE*sizeof(Table));
@@ -60,10 +57,7 @@ void addTableDirectiveArgument(char* argument){
     *(tables+numberOfTables-1) = table;
 }
 void addColumnName(char* columnName){
-    if(strlen(columnName)>MAX_NAME_LEN){
-        printf("\nSemantic error : column name must not exceed 128 characters.\n");
-        exit(EXIT_FAILURE);
-    }
+    checkNameLength(columnName);
     Table table=*(tables+numberOfTables-1);
     int numberOfColumns=table.numberOfColumns;
     if(numberOfColumns==MAX_COL_SIZE){
@@ -124,10 +118,7 @@ void addColumnDirectiveArgument(char* argument){
     *(tables+numberOfTables-1)=table;
 }
 void addViewName(char* viewName){
-    if(strlen(viewName)>MAX_NAME_LEN){
-        printf("\nSemantic error : view name must not exceed 128 characters.\n");
-        exit(EXIT_FAILURE);
-    }
+    checkNameLength(viewName);
     if(numberOfViews==MAX_VIEWS_SIZE){
         //re-allocating
         views = realloc(views,MAX_VIEWS_SIZE*sizeof(View));
@@ -231,10 +222,22 @@ void printViewTableNames(View view){
     }
     printf("\n");
 }
+void printTablesAndViews(){
+    Table table;
+    View view;
+    for(int i=0;i<numberOfTables;i++){
+        table = tables[i];
+        printTable(table);
+    }
+    for(int i=0;i<numberOfViews;i++){
+        view = views[i];
+        printView(view);
+    }
+}
 // void main(){
-//     Table table;
-//     View view;
+
 //     initTablesAndViews();
+
 //     addTableName("table1");
 //     addTableDirective(TOKEN_TD_SELECT);
 //     addColumnName("col1");
@@ -248,13 +251,7 @@ void printViewTableNames(View view){
 //     addViewName("view1");
 //     addViewTableName("table1");
 //     addViewTableName("table2");
-//     for(int i=0;i<numberOfTables;i++){
-//         table = tables[i];
-//         printTable(table);
-//     }
-//     for(int i=0;i<numberOfViews;i++){
-//         view = views[i];
-//         printView(view);
-//     }
+
+//     printTablesAndViews();
 // }
 

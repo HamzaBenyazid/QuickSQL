@@ -5,17 +5,26 @@
 #include<stdlib.h>
 #include<string.h>
 #include "data.h"
+#include "utils.h"
 
 
 
 void sem();
-int countNumberOfTables();
-int countNumberOfViews();
-int countNumberOfColumns(Table table);
-int countNumberOfTableDirectives(Table table);
+
+//Semantic Rule 1 : table names must be unique
 void checkTableNamesDeclarations();
+
+//Semantic Rule 2 : column names in a table must be unique
 void checkColumnNamesDeclarations();
+
+//Semantic Rule 3 : table directive must not be used more than one time in a table
 void checkTableDirectives();
+
+//Semantic Rule 4 : column directive must not be used more than one time in a column
 void checkColumnDirectives();
+
+//Semantic Rule 5 : table,column and view name lengths must not exceed 128 characters
+void checkNameLength(char* name);
+
 
 #endif

@@ -6,6 +6,7 @@
 #include<stdlib.h>
 #include"data.h"
 #include"lex.h"
+#include"sem.h"
 
 void initTablesAndViews();
 
@@ -33,7 +34,6 @@ void printColumnDirectives(Column column);
 void printColumnDirectiveArguments(ColumnDirective columnDirective);
 void printView(View view);
 void printViewTableNames(View view);
-
-
+void printTablesAndViews();
 
 #endif

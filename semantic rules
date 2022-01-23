@@ -2,7 +2,6 @@
 
 rule 1 : table names must be unique
 rule 2 : column names in a table must be unique
-rule 3 : every table directive must not be used more than one time in a table
-rule 4 : every column directive must not be used more than one time in a column
+rule 3 : table directive must not be used more than one time in a table
+rule 4 : column directive must not be used more than one time in a column
 rule 5 : table,column and view name lengths must not exceed 128 characters
-rule 6 : referenced table must be declared previously
