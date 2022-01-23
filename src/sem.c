@@ -83,43 +83,43 @@ void checkNameLength(char* name){
         exit(EXIT_FAILURE);
     }
 }
-void main(){
-    initTablesAndViews();
+// void main(){
+//     initTablesAndViews();
 
 
-    //remove comment from one part to test every rule separately 
+//     //remove comment from one part to test every rule separately 
 
 
-    // //testing rule 1
-    // addTableName("rule1");
-    // addTableName("rule1");
-    // printTablesAndViews();
-    // checkTableNamesDeclarations();
+//     // //testing rule 1
+//     // addTableName("rule1");
+//     // addTableName("rule1");
+//     // printTablesAndViews();
+//     // checkTableNamesDeclarations();
 
-    // //testing rule 2
-    // addTableName("rule2");
-    // addColumnName("col1");
-    // addColumnName("col1");
-    // printTablesAndViews();
-    // checkColumnNamesDeclarations();
+//     // //testing rule 2
+//     // addTableName("rule2");
+//     // addColumnName("col1");
+//     // addColumnName("col1");
+//     // printTablesAndViews();
+//     // checkColumnNamesDeclarations();
 
-    // //testing rule 3
-    // addTableName("rule3");
-    // addTableDirective(TOKEN_TD_SELECT);
-    // addTableDirective(TOKEN_TD_SELECT);
-    // printTablesAndViews();
-    // checkTableDirectives();
+//     // //testing rule 3
+//     // addTableName("rule3");
+//     // addTableDirective(TOKEN_TD_SELECT);
+//     // addTableDirective(TOKEN_TD_SELECT);
+//     // printTablesAndViews();
+//     // checkTableDirectives();
 
-    // //testing rule 4
-    // addTableName("rul4");
-    // addColumnName("col1");
-    // addColumnDirective(TOKEN_BETWEEN);
-    // addColumnDirective(TOKEN_BETWEEN);
-    // printTablesAndViews();
-    // checkColumnDirectives();
+//     // //testing rule 4
+//     // addTableName("rul4");
+//     // addColumnName("col1");
+//     // addColumnDirective(TOKEN_BETWEEN);
+//     // addColumnDirective(TOKEN_BETWEEN);
+//     // printTablesAndViews();
+//     // checkColumnDirectives();
 
-    // //testing rule 5
-    // addTableName("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque libero velit, ultricies eu iaculis ac, malesuada a urna sed.");
+//     // //testing rule 5
+//     // addTableName("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque libero velit, ultricies eu iaculis ac, malesuada a urna sed.");
 
-    freeTablesAndViews();
-}
+//     freeTablesAndViews();
+// }
