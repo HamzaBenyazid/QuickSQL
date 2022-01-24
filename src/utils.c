@@ -77,12 +77,20 @@ void addColumnName(char* columnName){
 
 void addColumnType(CODE_LEX type){
     ColumnType columnType = mapCodeLexToColumnType(type);
-    Table table=*(tables+numberOfTables-1);
+    Table table=tables[numberOfTables-1];
     int numberOfColumns=table.numberOfColumns;
-    Column column=*(table.columns+numberOfColumns-1);
-    column.type=type;
-    *(table.columns+numberOfColumns-1)=column;
-    *(tables+numberOfTables-1)=table;
+    Column column=table.columns[numberOfColumns-1];
+    column.type=columnType;
+    table.columns[numberOfColumns-1]=column;
+    tables[numberOfTables-1]=table;
+}
+void addVCLength(char* length){
+    Table table=tables[numberOfTables-1];
+    int numberOfColumns=table.numberOfColumns;
+    Column column=table.columns[numberOfColumns-1];
+    column.vcnnn = atoi(length);
+    table.columns[numberOfColumns-1]=column;
+    tables[numberOfTables-1]=table;
 }
 void addColumnDirective(CODE_LEX columnDirective){
     Table table = *(tables+numberOfTables-1);
@@ -152,7 +160,19 @@ ColumnType mapCodeLexToColumnType(CODE_LEX token){
 ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(CODE_LEX token){
     return (ColumnDirectiveToken)(token-TOKEN_PK);
 }
-
+int atoi(char* s){
+  int sign=1;
+  if(*s == '-'){
+    sign = -1;
+    s++;
+  }
+  int num=0;
+  while(*s){
+    num=((*s)-'0')+num*10;
+    s++;   
+  }
+  return num*sign;
+}
 void printTable(Table table){
     printf("Table : \n");
     printf("\tname : %s \n",table.name);

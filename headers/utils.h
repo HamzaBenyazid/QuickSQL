@@ -15,6 +15,7 @@ void addTableDirective(CODE_LEX tableDirective);
 void addTableDirectiveArgument(char* argument);
 void addColumnName(char* columnName);
 void addColumnType(CODE_LEX type);
+void addVCLength(char* length);
 void addColumnDirective(CODE_LEX columnDirective);
 void addColumnDirectiveArgument(char* argument);
 void addViewName(char* viewName);
@@ -24,6 +25,7 @@ void freeTablesAndViews();
 
 ColumnType mapCodeLexToColumnType(CODE_LEX token);
 ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(CODE_LEX token);
+int atoi(char* s);
 
 //for debugging
 

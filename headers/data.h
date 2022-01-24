@@ -49,6 +49,7 @@ typedef struct{
 typedef struct{
     char name[MAX_NAME_LEN];
     ColumnType type;
+    int vcnnn;
     ColumnDirective columnDirectives[MAX_NUM_CD];
     int numberOfCD; //number of column directives
 } Column;
