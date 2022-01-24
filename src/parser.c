@@ -1,4 +1,5 @@
 #include "../headers/parser.h"
+#include "../headers/utils.h"
 
 char* erreurs[] = {
   // column directives
@@ -19,6 +20,8 @@ char* erreurs[] = {
 enum {
   TRUE, FALSE
 } inComment;
+
+int nbrWhiteSpaces;
 
 void test_symbole(CODE_LEX code) {
   if (inComment == FALSE) comment();
@@ -45,14 +48,19 @@ void program() {
 
 void view() {
   test_symbole(TOKEN_VIEW);
+  addViewName(token->value);
   test_symbole(TOKEN_ID);
-  test_symbole(TOKEN_ID);
+  addViewName(token->value);
+  addViewTableName(TOKEN_ID);
   while(token->code != '\n') {
-    test_symbole(TOKEN_ID);
+    addViewName(token->value);
+    addViewTableName(TOKEN_ID);
   }
 }
 
 void table() {
+  nbrWhiteSpaces = -1;
+  addTableName(token->value);
   test_symbole(TOKEN_ID);
   while (token->code == TOKEN_TD_COLPREFIX
         || token->code == TOKEN_TD_SELECT)
@@ -67,6 +75,7 @@ void table() {
 }
 
 void table_directives() {
+  addTableDirective(token->code);
   switch (token->code) {
     case TOKEN_TD_COLPREFIX:
       colprefix_directive();
@@ -78,7 +87,11 @@ void table_directives() {
 }
 
 void column() {
+  if (atoi(token->value) != nbrWhiteSpaces && nbrWhiteSpaces != -1)
+    error(ERROR_WHITESPACE);
+  nbrWhiteSpaces = atoi(token->value);
   test_symbole(TOKEN_WHITESPACE);
+  addColumnName(token->value);
   test_symbole(TOKEN_ID);
   type();
   constraint();
@@ -87,6 +100,7 @@ void column() {
 
 void colprefix_directive() {
   lexer_get_next_token();
+  addTableDirectiveArgument(token->value);
   if(token->code == TOKEN_ID) {
     lexer_get_next_token();
   }
@@ -95,6 +109,8 @@ void colprefix_directive() {
 void type() {
   for (CODE_LEX code = TOKEN_NUM; code <= TOKEN_JSON; code++) {
     if (token->code == code) {
+      addColumnType(code);
+      if (code == TOKEN_VCNNN) addVCLength(token->value);
       lexer_get_next_token();
       break;
     }
@@ -102,6 +118,7 @@ void type() {
 }
 
 void constraint() {
+  addColumnDirective(token->code);
   switch (token->code) {
     case TOKEN_PK:
      test_symbole(TOKEN_PK);
@@ -132,29 +149,38 @@ void constraint() {
 
 void fk_constraint() {
   test_symbole(TOKEN_FK);
+  addColumnDirectiveArgument(token->value);
   test_symbole(TOKEN_ID);
 }
 
 void check_constraint() {
   test_symbole(TOKEN_CHECK);
+  addColumnDirectiveArgument(token->value);
   test_symbole(TOKEN_VALUE);
   while(token->code == TOKEN_COMMA) {
     lexer_get_next_token();
+    addColumnDirectiveArgument(token->value);
     test_symbole(TOKEN_VALUE);
   }
 }
 
-void between_consrtraint(){
+void between_constraint(){
   test_symbole(TOKEN_BETWEEN);
   switch (token->code)
   {
-  case TOKEN_NUMBER:
+  case TOKEN_NUMBER:{
+    addColumnDirectiveArgument(token->value);
     test_symbole(TOKEN_NUMBER);
+    addColumnDirectiveArgument(token->value);
     test_symbole(TOKEN_NUMBER);
+    }
     break;
-  case TOKEN_STRING:
+  case TOKEN_STRING:{
+    addColumnDirectiveArgument(token->value);
     test_symbole(TOKEN_STRING);
+    addColumnDirectiveArgument(token->value);
     test_symbole(TOKEN_STRING);
+    }
     break;
   default:
     error(TOKEN_VALUE);
@@ -164,6 +190,7 @@ void between_consrtraint(){
 
 void default_constraint() {
   test_symbole(TOKEN_DEFAULT);
+  addColumnDirectiveArgument(token->value);
   test_symbole(TOKEN_VALUE);
 }
 

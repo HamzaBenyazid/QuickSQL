@@ -45,7 +45,6 @@ typedef struct
 } Lexer;
 
 Lexer *lexer;
-Token *token;
 FILE *inputFile;
 int Putback;
 extern Token *token;
