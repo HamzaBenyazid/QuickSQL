@@ -1,2 +1,8 @@
-,
-    [
+user
+   id num /hjh
+   id_room vc23 /fk 
+   name vc30
+   adress vc100
+   bdate d 
+   nbr_children /check 1,2,3
+   role /check 55ad  
