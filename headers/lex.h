@@ -23,14 +23,14 @@ typedef enum
 	TOKEN_CLOB,
 	TOKEN_BLOB,
 	TOKEN_JSON,
+	TOKEN_PK,
 	TOKEN_FK,
 	TOKEN_CHECK,
 	TOKEN_NN,
-	TOKEN_UNIQUE,
 	TOKEN_BETWEEN,
 	TOKEN_INDEX,
 	TOKEN_DEFAULT,
-	TOKEN_PK,
+	TOKEN_UNIQUE,
 	// string between '' quotes
 	TOKEN_STRING,
 	// litteral number: 344,4 ,56 hhhhh
@@ -56,8 +56,8 @@ Lexer *lexer;
 Token *token;
 Token *Putback_token;
 FILE *inputFile;
-int Lines = 1;
-int Columns = 0;
+extern int Lines ;
+extern int Columns ;
 int Putback;
 Token **tokens;
 // prototypes

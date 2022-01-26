@@ -188,6 +188,16 @@ int a2i(char* s){
   }
   return num*sign;
 }
+Table getTable(char* name){
+    Table table;
+    for(int i=0;i<numberOfTables;i++){
+        table=tables[i];
+        if(strcmp(name,table.name)==0){
+            return table;
+        }
+    }
+    return table;
+}
 void printTable(Table table){
     printf("Table : \n");
     printf("\tname : %s \n",table.name);

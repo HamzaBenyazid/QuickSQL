@@ -42,6 +42,7 @@ int hasPrimaryKey(Table table){
 
 void generateSQL(char* fileName){
     char* fileNameWithExtention = malloc(strlen(fileName)+strlen(".sql"));
+    strcpy(fileNameWithExtention,fileName);
     strcat(fileNameWithExtention,".sql"); 
     sqlFile = fopen(fileNameWithExtention,"w");
     generateTables();
@@ -53,9 +54,7 @@ void generateTables(){
     for(int i=0;i<numberOfTables;i++){
         generateTable(tables[i]);
     }
-    for(int i=0;i<numberOfViews;i++){
-        generateView(views[i]);
-    }
+    putString("\n");
 }
 
 void generateTable(Table table){
@@ -63,6 +62,7 @@ void generateTable(Table table){
     putString(table.name);
     putString(" (\n");
     generateColumns(table);
+    putString(")\n;\n\n");
 }
 
 void generateColumns(Table table){
@@ -134,6 +134,9 @@ void generateConstraint(char* tableName,char* columnName,ColumnDirective columnD
     putString(columnName);
     putString("_");
     switch(columnDirective.token){
+        case PK_TOKEN :
+            putString("pk primary key");
+            break;
         case FK_TOKEN : 
             putString("fk ");
             putString("references ");
@@ -181,4 +184,60 @@ void generateConstraint(char* tableName,char* columnName,ColumnDirective columnD
             putString(" unique");
             break;
     }
+}
+void generateViews(){
+    for(int i=0;i<numberOfViews;i++){
+        generateView(views[i]);
+    }
+}
+void generateView(View view){
+    Table table;
+    Column column;
+    putString("create or replace view ");
+    putString(view.name);
+    putString(" as \nselect\n");
+    for(int i=0;i<view.numberOfTableNames;i++){
+        table=getTable(view.tableNames[i]);
+        for(int j=0;j<table.numberOfColumns;j++){
+            column = table.columns[j];
+            putString("\t");
+            putString(table.name);
+            putString(".");
+            putString(column.name);
+            putString("\t\t\t\t\t\t");
+            putString(table.name);
+            putString("_");
+            putString(column.name);
+            if(i!=view.numberOfTableNames-1 || j!=table.numberOfColumns-1)
+                putString(",");
+            putString("\n");
+        }
+    }
+    putString("from \n");
+    for(int i=0;i<view.numberOfTableNames;i++){
+        putString(view.tableNames[i]);
+        if(i!=view.numberOfTableNames-1)
+            putString(",");   
+    }
+    putString("\nwhere \n\n");
+
+}
+void main(){
+    initTablesAndViewsAndIndexes();
+    addTableName("table1");
+    addColumnName("col1");
+    addColumnType(TOKEN_D);
+    addColumnDirective(TOKEN_CHECK);
+    addColumnDirectiveArgument("12-10-2022");
+    addColumnDirectiveArgument("12-10-2023");
+    addColumnName("col2");
+    addColumnDirective(TOKEN_FK);
+    addColumnDirectiveArgument("table2");
+    addTableName("table2");
+    addColumnName("col1");
+    
+    addViewName("view1");
+    addViewTableName("table1");
+    addViewTableName("table2");
+    generateSQL("file1");
 }

@@ -75,7 +75,7 @@ typedef struct{
 }View;
 typedef struct{
     char tableName[MAX_NAME_LEN];
-    char columnName[MAX_NAME_LEN]
+    char columnName[MAX_NAME_LEN];
 }Index;
 
 Table* tables;

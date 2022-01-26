@@ -21,6 +21,7 @@ void addColumnDirectiveArgument(char* argument);
 void addViewName(char* viewName);
 void addViewTableName(char* tableName);
 void addIndex();
+Table getTable(char* name);
 
 void freeTablesAndViews();
 
