@@ -99,6 +99,8 @@ void addColumnDirective(Type columnDirective){
     int numberOfColumns=table.numberOfColumns;
     Column column = *(table.columns+numberOfColumns-1);
     ColumnDirectiveToken token=mapCodeLexToColumnDirectiveToken(columnDirective);
+    if(token==INDEX_TOKEN) 
+        addIndex();
     ColumnDirective directive;
     directive.token=token;
     directive.numberOfArgs=0;

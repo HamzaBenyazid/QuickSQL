@@ -46,11 +46,14 @@ void generateSQL(char* fileName){
     strcat(fileNameWithExtention,".sql"); 
     sqlFile = fopen(fileNameWithExtention,"w");
     generateTables();
+    generateIndexes();
     generateViews();
+    generateSelectquerys();
     fclose(sqlFile);
 }
 
 void generateTables(){
+    putString("-- create tables\n");
     for(int i=0;i<numberOfTables;i++){
         generateTable(tables[i]);
     }
@@ -123,7 +126,8 @@ void generateConstraints(char* tableName,Column column){
     ColumnDirective columnDirective;
     for(int i=0;i<column.numberOfCD;i++){
         columnDirective = column.columnDirectives[i];
-        generateConstraint(tableName,column.name,columnDirective);
+        if(columnDirective.token!=INDEX_TOKEN)
+            generateConstraint(tableName,column.name,columnDirective);
     }
 }
 
@@ -172,8 +176,6 @@ void generateConstraint(char* tableName,char* columnName,ColumnDirective columnD
             putString(columnDirective.arguments[1]);
             putString(")");
             break;
-        case INDEX_TOKEN :
-            addIndex(tableName,columnName);
         case DEFAULT_TOKEN :
             putString("df");
             putString(" default on null ");
@@ -185,7 +187,27 @@ void generateConstraint(char* tableName,char* columnName,ColumnDirective columnD
             break;
     }
 }
+void generateIndexes(){
+    putString("-- table index\n");
+    for(int i=0;i<numberOfIndexes;i++){
+        generateIndex(indexes[i],i+1);
+    }
+    putString("\n");
+}
+void generateIndex(Index index,int indexNumber){
+    /*create index user2_i1 on user2 (col1);*/
+    putString("create index ");
+    putString(index.tableName);
+    putString("_");
+    putInt(indexNumber);
+    putString(" on ");
+    putString(index.tableName);
+    putString(" (");
+    putString(index.columnName);
+    putString(");\n");
+}
 void generateViews(){
+    putString("-- create views\n");
     for(int i=0;i<numberOfViews;i++){
         generateView(views[i]);
     }
@@ -215,16 +237,47 @@ void generateView(View view){
     }
     putString("from \n");
     for(int i=0;i<view.numberOfTableNames;i++){
+        putString("\t");
         putString(view.tableNames[i]);
         if(i!=view.numberOfTableNames-1)
             putString(",");   
     }
-    putString("\nwhere \n\n");
+    putString("\nwhere \n\n/\n\n");
 
+}
+void generateSelectquerys(){
+    Table table;
+    putString("-- load data\n");
+    for(int i=0;i<numberOfTables;i++){
+        table=tables[i];
+        if(hasSelectDirective(table))
+            generateSelectquery(table);
+    }
+}
+void generateSelectquery(Table table){
+    putString("select\n");
+    for(int i=0;i<table.numberOfColumns;i++){
+        putString("\t");
+        putString(table.columns[i].name);
+        if(i!=table.numberOfColumns-1)
+            putString(",");
+        putString("\n");
+    }
+    putString("from ");
+    putString(table.name);
+    putString(";\n\n");
+}
+int hasSelectDirective(Table table){
+    for(int i=0;i<table.numberOfTD;i++){
+        if(table.tableDirectives[i].token==SELECT_TOKEN)
+            return 1;
+    }
+    return 0;
 }
 void main(){
     initTablesAndViewsAndIndexes();
     addTableName("table1");
+    addTableDirective(TOKEN_TD_SELECT);
     addColumnName("col1");
     addColumnType(TOKEN_D);
     addColumnDirective(TOKEN_CHECK);
@@ -235,6 +288,7 @@ void main(){
     addColumnDirectiveArgument("table2");
     addTableName("table2");
     addColumnName("col1");
+    addColumnDirective(TOKEN_INDEX);
     
     addViewName("view1");
     addViewTableName("table1");

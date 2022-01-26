@@ -9,8 +9,13 @@
 
 void generateSQL();
 void generateTables();
+void generateIndexes();
 void generateViews();
+void generateSelectquerys();
+void generateSelectquery(Table table);
+int hasSelectDirective(Table table);
 void generateTable(Table table);
+void generateIndex(Index index,int indexNumber);
 void generateView(View view);
 void generateColumns(Table table);
 void generateColumn(char* tableName,Column column,int isLastCol);
