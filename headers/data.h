@@ -72,9 +72,14 @@ typedef struct{
     char** tableNames;
     int numberOfTableNames;
 }View;
+typedef struct{
+    char tableName[MAX_NAME_LEN];
+    char columnName[MAX_NAME_LEN]
+}Index;
 
 Table* tables;
 View* views;
+Index* indexes;
 
 int numberOfTables;
 int numberOfViews;
