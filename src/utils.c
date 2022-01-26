@@ -3,11 +3,13 @@
 int numberOfTables;
 int numberOfViews;
 
-void initTablesAndViews(){
+void initTablesAndViewsAndIndexes(){
     tables = malloc(MAX_TAB_SIZE*sizeof(Table));
     numberOfTables = 0;
     views = malloc(MAX_VIEWS_SIZE*sizeof(View));
     numberOfViews = 0;
+    indexes = malloc(MAX_INDEXES_SIZE*sizeof(Index));
+    numberOfIndexes=0;
 }
 void freeTablesAndViews(){
     for(int i=0;i<numberOfTables;i++){

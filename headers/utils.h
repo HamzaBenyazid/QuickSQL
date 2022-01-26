@@ -8,7 +8,7 @@
 #include"lex.h"
 #include"sem.h"
 
-void initTablesAndViews();
+void initTablesAndViewsAndIndexes();
 
 void addTableName(char* tableName);
 void addTableDirective(Type tableDirective);
