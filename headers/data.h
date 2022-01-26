@@ -6,6 +6,7 @@
 #define MAX_NAME_LEN 128
 #define MAX_TAB_SIZE 10
 #define MAX_VIEWS_SIZE 10
+#define MAX_INDEXES_SIZE 10
 #define MAX_COL_SIZE 100
 #define MAX_CD_ARGS 10
 #define MAX_VIEW_TABS 10
@@ -83,5 +84,6 @@ Index* indexes;
 
 int numberOfTables;
 int numberOfViews;
+int numberOfIndexes;
 
 #endif
