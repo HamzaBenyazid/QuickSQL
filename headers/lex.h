@@ -6,9 +6,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-typedef struct
-{
-	enum
+typedef enum
 	{
 		// valid table, view,comlumn name
 		TOKEN_ID,
@@ -43,7 +41,10 @@ typedef struct
 		TOKEN_EOF,
 		TOKEN_ERR,
 		TOKEN_WHITESPACE
-	} type;
+	} Type;
+typedef struct
+{
+	Type type;
 	char *value;
 } Token;
 
