@@ -11,20 +11,21 @@
 void initTablesAndViews();
 
 void addTableName(char* tableName);
-void addTableDirective(CODE_LEX tableDirective);
+void addTableDirective(Type tableDirective);
 void addTableDirectiveArgument(char* argument);
 void addColumnName(char* columnName);
-void addColumnType(CODE_LEX type);
+void addColumnType(Type type);
 void addVCLength(char* length);
-void addColumnDirective(CODE_LEX columnDirective);
+void addColumnDirective(Type columnDirective);
 void addColumnDirectiveArgument(char* argument);
 void addViewName(char* viewName);
 void addViewTableName(char* tableName);
+void addIndex();
 
 void freeTablesAndViews();
 
-ColumnType mapCodeLexToColumnType(CODE_LEX token);
-ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(CODE_LEX token);
+ColumnType mapCodeLexToColumnType(Type token);
+ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(Type token);
 int atoi(char* s);
 
 //for debugging

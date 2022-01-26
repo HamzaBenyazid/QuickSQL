@@ -33,7 +33,7 @@ void addTableName(char* tableName){
     *(tables+numberOfTables)=table;
     numberOfTables++;
 }
-void addTableDirective(CODE_LEX tableDirectivetoken){
+void addTableDirective(Type tableDirectivetoken){
     Table table = *(tables+numberOfTables-1);
     TableDirective tableDirective;
     if(tableDirectivetoken==TOKEN_TD_COLPREFIX){
@@ -75,7 +75,7 @@ void addColumnName(char* columnName){
     *(tables+numberOfTables-1)=table;
 }
 
-void addColumnType(CODE_LEX type){
+void addColumnType(Type type){
     ColumnType columnType = mapCodeLexToColumnType(type);
     Table table=tables[numberOfTables-1];
     int numberOfColumns=table.numberOfColumns;
@@ -92,7 +92,7 @@ void addVCLength(char* length){
     table.columns[numberOfColumns-1]=column;
     tables[numberOfTables-1]=table;
 }
-void addColumnDirective(CODE_LEX columnDirective){
+void addColumnDirective(Type columnDirective){
     Table table = *(tables+numberOfTables-1);
     int numberOfColumns=table.numberOfColumns;
     Column column = *(table.columns+numberOfColumns-1);
@@ -154,10 +154,23 @@ void addViewTableName(char* tableName){
     view.numberOfTableNames++;
     views[numberOfViews-1]=view;
 }
-ColumnType mapCodeLexToColumnType(CODE_LEX token){
+void addIndex(){
+    if(numberOfIndexes==MAX_INDEXES_SIZE){
+        indexes = realloc(indexes,MAX_INDEXES_SIZE*sizeof(Index));
+    }
+    Table table = tables[numberOfTables-1];
+    Column column = table.columns[table.numberOfColumns-1];
+    Index index;
+    strcpy(index.tableName,table.name);
+    strcpy(index.columnName,column.name);
+    indexes[numberOfIndexes]=index;
+    numberOfIndexes++;
+}
+
+ColumnType mapCodeLexToColumnType(Type token){
     return (ColumnType)(token-TOKEN_NUM);
 }
-ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(CODE_LEX token){
+ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(Type token){
     return (ColumnDirectiveToken)(token-TOKEN_PK);
 }
 int atoi(char* s){
