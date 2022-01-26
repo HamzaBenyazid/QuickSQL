@@ -26,7 +26,7 @@ void freeTablesAndViews();
 
 ColumnType mapCodeLexToColumnType(Type token);
 ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(Type token);
-int atoi(char* s);
+int a2i(char* s);
 
 //for debugging
 

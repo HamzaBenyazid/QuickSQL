@@ -90,7 +90,7 @@ void addVCLength(char* length){
     Table table=tables[numberOfTables-1];
     int numberOfColumns=table.numberOfColumns;
     Column column=table.columns[numberOfColumns-1];
-    column.vcnnn = atoi(length);
+    column.vcnnn = a2i(length);
     table.columns[numberOfColumns-1]=column;
     tables[numberOfTables-1]=table;
 }
@@ -175,7 +175,7 @@ ColumnType mapCodeLexToColumnType(Type token){
 ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(Type token){
     return (ColumnDirectiveToken)(token-TOKEN_PK);
 }
-int atoi(char* s){
+int a2i(char* s){
   int sign=1;
   if(*s == '-'){
     sign = -1;
