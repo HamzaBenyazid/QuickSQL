@@ -26,5 +26,8 @@ void checkColumnDirectives();
 //Semantic Rule 5 : table,column and view name lengths must not exceed 128 characters
 void checkNameLength(char* name);
 
+//Semantic Rule 6 : tables referenced in views must be declared in the same file
+void checkViewsTables();
+
 
 #endif

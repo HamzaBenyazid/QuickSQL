@@ -200,6 +200,16 @@ Table getTable(char* name){
     }
     return table;
 }
+int tableExists(char* tableName){
+    Table table;
+    for(int i=0;i<numberOfTables;i++){
+        table=tables[i];
+        if(strcmp(tableName,table.name)==0){
+            return 1;
+        }
+    }
+    return 0;
+}
 void printTable(Table table){
     printf("Table : \n");
     printf("\tname : %s \n",table.name);

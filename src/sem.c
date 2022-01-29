@@ -6,7 +6,7 @@ void sem(){
     checkColumnNamesDeclarations();
     checkTableDirectives();
     checkColumnDirectives();
-
+    checkViewsTables();
 }
 
 void checkTableNamesDeclarations(){
@@ -81,6 +81,18 @@ void checkNameLength(char* name){
     if(strlen(name)>MAX_NAME_LEN){
         printf("\nSemantic error : table,column and view name must not exceed 128 characters.\n");
         exit(EXIT_FAILURE);
+    }
+}
+void checkViewsTables(){
+    View view;
+    for(int i=0;i<numberOfViews;i++){
+        view = views[i];
+        for(int j=0;j<view.numberOfTableNames;j++){
+            if(tableExists(view.tableNames[j])==0){
+                printf("\nSemantic Error : table referenced in views must be declared.\n");
+                exit(EXIT_FAILURE);
+            }
+        }
     }
 }
 // void main(){

@@ -22,6 +22,7 @@ void addViewName(char* viewName);
 void addViewTableName(char* tableName);
 void addIndex();
 Table getTable(char* name);
+int tableExists(char* name);
 
 void freeTablesAndViews();
 
