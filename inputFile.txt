@@ -2,7 +2,10 @@ etudiant /select --etudiant
     nom
     prenom
     DDN d [date de naissance] /index
-    filiere /fk filiere 
+    filiere /fk filiere
+
+
+
 filiere
     nom /check 'GL','IWIM','BI'
     nombre_des_etudiants int

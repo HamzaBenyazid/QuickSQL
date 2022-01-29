@@ -33,6 +33,7 @@ void error(Type expectedToken,Type foundToken) {
 }
 
 void program() {
+  while(token->type==TOKEN_NL) token=lexer_get_next_token();
   if (token->type == TOKEN_ID) {
     table();
     program();
