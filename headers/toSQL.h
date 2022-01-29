@@ -21,6 +21,8 @@ void generateColumns(Table table);
 void generateColumn(char* tableName,Column column,int isLastCol);
 void generateConstraints(char* tableName,Column column);
 void generateConstraint(char* tableName,char* columnName,ColumnDirective columnDirective);
+void generateColumnsComment(Table table,int hasTableComment);
+void generateTableComment(Table table);
 int hasPrimaryKey(Table table);
 int isPrimaryKey(Column column);
 int isForeightKey(Column column);

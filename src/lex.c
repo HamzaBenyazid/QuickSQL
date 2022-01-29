@@ -7,6 +7,43 @@
 int Lines = 1;
 int Columns = 0;
 
+
+char *token_str[] = {
+		"TOKEN_ID",
+		"TOKEN_NL",
+		"TOKEN_VIEW",
+		"TOKEN_TD_SELECT",
+		"TOKEN_TD_COLPREFIX",
+		"TOKEN_NUM",
+		"TOKEN_INT",
+		"TOKEN_D",
+		"TOKEN_TS",
+		"TOKEN_TSTZ",
+		"TOKEN_VC",
+		"TOKEN_VCNNN",
+		"TOKEN_CLOB",
+		"TOKEN_BLOB",
+		"TOKEN_JSON",
+		"TOKEN_PK",
+		"TOKEN_FK",
+		"TOKEN_CHECK",
+		"TOKEN_NN",
+		"TOKEN_BETWEEN",
+		"TOKEN_INDEX",
+		"TOKEN_DEFAULT",
+		"TOKEN_UNIQUE",
+		// string between '' quotes
+		"TOKEN_STRING",
+		// litteral number: 344,4 ,56 hhhhh
+		"TOKEN_NUMBER",
+		"TOKEN_COMMENT",
+		"TOKEN_COMMA",
+		"TOKEN_EOF",
+		"TOKEN_ERR",
+		"TOKEN_WHITESPACE"
+
+	};
+
 void lexer_init()
 {
 	lexer = calloc(1, sizeof(Lexer));
@@ -34,6 +71,7 @@ Token *token_init(int type, char *value)
 	Token *token = calloc(1, sizeof(Token));
 	token->type = type;
 	token->value = value;
+	printf("< %s , %s > \n", token_str[token->type], token->value);
 	return token;
 }
 char *lexer_get_caracter_as_string()
@@ -157,12 +195,12 @@ void init_tab_token()
 		Token *token = calloc(1, sizeof(Token));
 		token->type = TOKEN_WHITESPACE;
 		char *str = calloc(1, 5 * sizeof(char));
-		token->value = itoa(i, str, 10);
+		token->value = i2a(i, str, 10);
 		lexer_token_putback(token);
 	}
 }
 
-char *read_comment_1()
+char *lexer_get_comment_1()
 {
 	get_next_car();
 	char *comment = calloc(2, sizeof(char));
@@ -176,10 +214,9 @@ char *read_comment_1()
 			strcat(comment, str);
 	}
 	lexer_putback();
-	// printf("%c",Putback);
 	return comment;
 }
-char *read_comment_2()
+char *lexer_get_comment_2()
 {
 	get_next_car();
 	char *comment = calloc(2, sizeof(char));
@@ -200,9 +237,9 @@ char *read_comment_2()
 		return NULL;
 	}
 }
-
 Token *lexer_get_next_token()
 {
+	char *car;
 	if (Putback_token)
 	{
 		Token *token = token_init(Putback_token->type, Putback_token->value);
@@ -221,7 +258,7 @@ Token *lexer_get_next_token()
 		lexer_putback();
 		char *str = calloc(1, 5 * sizeof(char));
 		if (i > 0)
-			return token_init(TOKEN_WHITESPACE, itoa(i, str, 10));
+			return token_init(TOKEN_WHITESPACE, i2a(i, str, 10));
 	}
 	skip_whitespace();
 	switch (lexer->c)
@@ -230,7 +267,7 @@ Token *lexer_get_next_token()
 		return token_init(TOKEN_COMMA, lexer_get_caracter_as_string());
 		break;
 	case '\n':
-		char *car = lexer_get_caracter_as_string();
+		car = lexer_get_caracter_as_string();
 		init_tab_token();
 		return token_init(TOKEN_NL, car);
 		break;
@@ -251,30 +288,25 @@ Token *lexer_get_next_token()
 			get_next_car();
 			if (lexer->c == '-')
 			{
-				char *com = read_comment_1();
-				char *comment = calloc(1, sizeof(char) * (strlen("--") + strlen(com) + 1));
-				comment[0] = '-';
-				comment[1] = '-';
-				strcat(comment, com);
-				return token_init(TOKEN_COMMENT, comment);
+				char *com = lexer_get_comment_1();
+				return token_init(TOKEN_COMMENT, com);
 			}
 			free(value);
 			lexer_putback();
 		}
 		if (lexer->c == '[')
 		{
-			char *comment = read_comment_2();
+			char *comment = lexer_get_comment_2();
 			if (comment != NULL)
 			{
-				char *comm = calloc(1, sizeof(char) * (strlen("[]") + strlen(comment) + 1));
-				comm[0] = '[';
-				strcat(comm, comment);
-				strcat(comm, "]");
-				return token_init(TOKEN_COMMENT, comm);
+				return token_init(TOKEN_COMMENT, comment);
 			}
 
 			else
-				return token_init(TOKEN_ERR, "Expected ]");
+			{
+				printf("ERROR: Invalid Token\n");
+				exit(1);
+			}
 		}
 		if (lexer->c == '/')
 		{ // table directives
@@ -304,7 +336,7 @@ Token *lexer_get_next_token()
 				return token_init(TOKEN_PK, slash);
 			else
 			{
-				return token_init(TOKEN_ERR, "Unvalid directive");
+				printf("ERROR: Invalid Token\n");
 				exit(1);
 			}
 		}
@@ -323,6 +355,10 @@ Token *lexer_get_next_token()
 			{
 
 				char *value = lexer_get_id();
+				if (strcmp(value, "int") == 0)
+					return token_init(TOKEN_INT, value);
+				if (strcmp(value, "number") == 0)
+					return token_init(TOKEN_NUMBER, value);
 				if (strcmp(value, "d") == 0)
 					return token_init(TOKEN_D, value);
 				if (strcmp(value, "clob") == 0)
@@ -339,6 +375,8 @@ Token *lexer_get_next_token()
 					return token_init(TOKEN_TSTZ, value);
 				if (isVCNNN(value))
 					return token_init(TOKEN_VCNNN, value);
+				if (strcmp(value, "view") == 0)
+					return token_init(TOKEN_VIEW, value);
 				return token_init(TOKEN_ID, value);
 			}
 
@@ -346,71 +384,17 @@ Token *lexer_get_next_token()
 			{
 				char *string = lexer_get_string_token();
 				if (Putback == EOF)
-					return token_init(TOKEN_ERR, "Expected ' ");
+				{
+					printf("ERROR: Invalid Token\n");
+					exit(1);
+				}
 				return token_init(TOKEN_STRING, string);
 			}
 		}
-		return token_init(TOKEN_ERR, lexer_get_caracter_as_string());
+		printf("ERROR: Invalid Token\n");
+		exit(1);
 	}
 	}
-}
-void lexer_scan_file()
-{
-	// maybe remove this later
-	char *token_str[] = {
-		"TOKEN_ID",
-		"TOKEN_NL",
-		"TOKEN_VIEW",
-		"TOKEN_TD_SELECT",
-		"TOKEN_TD_COLPREFIX",
-		"TOKEN_NUM",
-		"TOKEN_INT",
-		"TOKEN_D",
-		"TOKEN_TS",
-		"TOKEN_TSTZ",
-		"TOKEN_VC",
-		"TOKEN_VCNNN",
-		"TOKEN_CLOB",
-		"TOKEN_BLOB",
-		"TOKEN_JSON",
-		"TOKEN_FK",
-		"TOKEN_CHECK",
-		"TOKEN_NN",
-		"TOKEN_UNIQUE",
-		"TOKEN_BETWEEN",
-		"TOKEN_INDEX",
-		"TOKEN_DEFAULT",
-		"TOKEN_PK",
-		// string between '' quotes
-		"TOKEN_STRING",
-		// litteral number: 344,4 ,56 hhhhh
-		"TOKEN_NUMBER",
-		"TOKEN_COMMENT",
-		"TOKEN_COMMA",
-		"TOKEN_EOF",
-		"TOKEN_ERR",
-		"TOKEN_WHITESPACE"
-
-	};
-	lexer_init();
-
-	int i = 0;
-	tokens = (Token **)malloc(sizeof(Token));
-	while (!feof(inputFile))
-	{
-		Token *token = lexer_get_next_token();
-		tokens = (Token **)realloc(tokens, (i + 1) * sizeof(Token));
-		*(tokens + i) = token;
-		i++;
-	}
-	if (Putback == EOF)
-	{
-		Token *tok = token_init(TOKEN_EOF, "EOF");
-		tokens = (Token **)realloc(tokens, (i + 1) * sizeof(Token));
-		*(tokens + i) = tok;
-	}
-	for (int j = 0; j <= i; j++)
-		printf("< %s , %s > \n", token_str[tokens[j]->type], tokens[j]->value);
 }
 void skip_whitespace()
 {
@@ -421,19 +405,20 @@ void skip_whitespace()
 		get_next_car();
 	}
 }
-int main(int argc, char *argv[])
-{
-	if (argc != 2)
-	{
-		printf("Please insert all requierements to compile the program");
-		exit(1);
-	}
-	if ((inputFile = fopen(argv[1], "r")) == NULL)
-	{
-		printf("Could not open the folder");
-		exit(1);
-	}
+// int main(int argc, char *argv[])
+// {
+// 	if (argc != 2)
+// 	{
+// 		printf("Please insert all requierements to compile the program");
+// 		exit(1);
+// 	}
+// 	if ((inputFile = fopen(argv[1], "r")) == NULL)
+// 	{
+// 		printf("Could not open the folder");
+// 		exit(1);
+// 	}
+// 	lexer_init();
+// 	lexer_get_next_token();
 
-	lexer_scan_file();
-	return 0;
-}
+// 	return 0;
+// }

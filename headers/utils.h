@@ -1,11 +1,10 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_H_
+#define UTILS_H_
 
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
 #include"data.h"
-#include"lex.h"
 #include"sem.h"
 
 void initTablesAndViewsAndIndexes();
@@ -20,15 +19,17 @@ void addColumnDirective(Type columnDirective);
 void addColumnDirectiveArgument(char* argument);
 void addViewName(char* viewName);
 void addViewTableName(char* tableName);
+void addComment(char* comment);
 void addIndex();
 Table getTable(char* name);
 int tableExists(char* name);
 
-void freeTablesAndViews();
+void freeTablesAndViewsAndIndexes();
 
 ColumnType mapCodeLexToColumnType(Type token);
 ColumnDirectiveToken mapCodeLexToColumnDirectiveToken(Type token);
 int a2i(char* s);
+char* i2a(int num, char* buffer, int base);
 
 //for debugging
 

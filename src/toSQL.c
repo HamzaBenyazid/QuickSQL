@@ -50,6 +50,7 @@ void generateSQL(char* fileName){
     generateViews();
     generateSelectquerys();
     fclose(sqlFile);
+    freeTablesAndViewsAndIndexes();
 }
 
 void generateTables(){
@@ -66,6 +67,13 @@ void generateTable(Table table){
     putString(" (\n");
     generateColumns(table);
     putString(")\n;\n\n");
+
+    if(table.comment!=NULL) {
+        generateTableComment(table);
+        generateColumnsComment(table,1);
+    }else{
+        generateColumnsComment(table,0);
+    }
 }
 
 void generateColumns(Table table){
@@ -83,6 +91,38 @@ void generateColumns(Table table){
 
         generateColumn(table.name,column,isLastCol);
     }
+}
+void generateTableComment(Table table){
+    //comment on table user1 is 'hhh';
+    putString("--comments\n");
+    putString("comment on table ");
+    putString(table.name);
+    putString(" is '");
+    putString(table.comment);
+    putString("';\n");
+}
+void generateColumnsComment(Table table,int hasTableComment){
+    Column column;
+    int isFirstComment=1;
+    for(int i=0;i<table.numberOfColumns;i++){
+        column = table.columns[i];
+        //comment on column user1.col1 is 'comment';
+        if(column.comment!=NULL){
+            if(!hasTableComment && isFirstComment){
+                putString("--comments\n");
+                isFirstComment=0;
+            }
+            putString("comment on column ");
+            putString(table.name);
+            putString(".");
+            putString(column.name);
+            putString(" is '");
+            putString(column.comment);
+            putString("';\n");
+        }
+    }
+    if(isFirstComment && hasTableComment)
+        putString("\n");
 }
 void generateColumn(char* tableName,Column column,int isLastCol){
     putString("\t");
@@ -274,24 +314,24 @@ int hasSelectDirective(Table table){
     }
     return 0;
 }
-void main(){
-    initTablesAndViewsAndIndexes();
-    addTableName("table1");
-    addTableDirective(TOKEN_TD_SELECT);
-    addColumnName("col1");
-    addColumnType(TOKEN_D);
-    addColumnDirective(TOKEN_CHECK);
-    addColumnDirectiveArgument("12-10-2022");
-    addColumnDirectiveArgument("12-10-2023");
-    addColumnName("col2");
-    addColumnDirective(TOKEN_FK);
-    addColumnDirectiveArgument("table2");
-    addTableName("table2");
-    addColumnName("col1");
-    addColumnDirective(TOKEN_INDEX);
+// void main(){
+//     initTablesAndViewsAndIndexes();
+//     addTableName("table1");
+//     addTableDirective(TOKEN_TD_SELECT);
+//     addColumnName("col1");
+//     addColumnType(TOKEN_D);
+//     addColumnDirective(TOKEN_CHECK);
+//     addColumnDirectiveArgument("12-10-2022");
+//     addColumnDirectiveArgument("12-10-2023");
+//     addColumnName("col2");
+//     addColumnDirective(TOKEN_FK);
+//     addColumnDirectiveArgument("table2");
+//     addTableName("table2");
+//     addColumnName("col1");
+//     addColumnDirective(TOKEN_INDEX);
     
-    addViewName("view1");
-    addViewTableName("table1");
-    addViewTableName("table2");
-    generateSQL("file1");
-}
+//     addViewName("view1");
+//     addViewTableName("table1");
+//     addViewTableName("table2");
+//     generateSQL("file1");
+// }

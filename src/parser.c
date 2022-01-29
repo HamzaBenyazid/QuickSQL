@@ -10,37 +10,34 @@ char* erreurs[] = {
   "ERROR_VC", "ERROR_VCNNN", "ERROR_CLOB", "ERROR_BLOB", "ERROR_JSON",
   // table directives
   "ERROR_TD_COLPREFIX", "ERROR_TD_SELECT",
-  // comments
-  "ERROR_DOUBLE_HYPHEN", "ERROR_OPN_BRCKT", "ERROR_CLS_BRCKT", "ERROR_COMMENT",
   // other
   "ERROR_ID", "ERROR_VIEW", "ERROR_NL", "ERROR_VALUE", "ERROR_COMMA",
   "ERROR_EOF", "ERROR_ERR", "ERROR_WHITESPACE", "ERROR_NUMBER", "ERROR_STRING"
 };
 
-enum {
-  TRUE, FALSE
-} inComment;
-
 int nbrWhiteSpaces;
-
-void test_symbole(CODE_LEX code) {
-  if (inComment == FALSE) comment();
-  if (code != token->code) error((Error)token);
-  else lexer_get_next_token();
+void parse(){
+  initTablesAndViewsAndIndexes();
+  token=lexer_get_next_token();
+  program();
+}
+void test_symbole(Type type) {
+  if (token->type == TOKEN_COMMENT) comment();
+  if (type != token->type) error(type,token->type);
+  else token=lexer_get_next_token();
 }
 
-void error(Error err) {
-  printf("erreur de type :%s", erreurs[err]);
+void error(Type expectedToken,Type foundToken) {
+  printf("\nSyntax error in line %d: expected %s found %s\n",Lines,token_str[expectedToken],token_str[foundToken]);
   exit(-1);
 }
 
 void program() {
-  inComment = FALSE;
-  if (token->code == TOKEN_ID) {
+  if (token->type == TOKEN_ID) {
     table();
     program();
   }
-  if (token->code == TOKEN_VIEW) {
+  if (token->type == TOKEN_VIEW) {
     view ();
     program();
   }
@@ -50,11 +47,11 @@ void view() {
   test_symbole(TOKEN_VIEW);
   addViewName(token->value);
   test_symbole(TOKEN_ID);
-  addViewName(token->value);
-  addViewTableName(TOKEN_ID);
-  while(token->code != '\n') {
-    addViewName(token->value);
-    addViewTableName(TOKEN_ID);
+  addViewTableName(token->value);
+  test_symbole(TOKEN_ID);
+  while(token->type != TOKEN_NL && token->type !=TOKEN_EOF) {
+    addViewTableName(token->value);
+    test_symbole(TOKEN_ID);
   }
 }
 
@@ -62,21 +59,21 @@ void table() {
   nbrWhiteSpaces = -1;
   addTableName(token->value);
   test_symbole(TOKEN_ID);
-  while (token->code == TOKEN_TD_COLPREFIX
-        || token->code == TOKEN_TD_SELECT)
+  while (token->type == TOKEN_TD_COLPREFIX
+        || token->type == TOKEN_TD_SELECT)
   {
     table_directives();
   }
   test_symbole(TOKEN_NL);
   column();
-  while (token->code == TOKEN_WHITESPACE) {
+  while (token->type == TOKEN_WHITESPACE) {
     column();
   }
 }
 
 void table_directives() {
-  addTableDirective(token->code);
-  switch (token->code) {
+  addTableDirective(token->type);
+  switch (token->type) {
     case TOKEN_TD_COLPREFIX:
       colprefix_directive();
       break;
@@ -87,9 +84,11 @@ void table_directives() {
 }
 
 void column() {
-  if (atoi(token->value) != nbrWhiteSpaces && nbrWhiteSpaces != -1)
-    error(ERROR_WHITESPACE);
-  nbrWhiteSpaces = atoi(token->value);
+  if ((a2i(token->value) != nbrWhiteSpaces) && (nbrWhiteSpaces != -1)){
+    printf("\nIndentationError in line %d: unexpected indent \n",Lines);
+    exit(-1);
+  }
+  nbrWhiteSpaces = a2i(token->value);
   test_symbole(TOKEN_WHITESPACE);
   addColumnName(token->value);
   test_symbole(TOKEN_ID);
@@ -99,27 +98,27 @@ void column() {
 }
 
 void colprefix_directive() {
-  lexer_get_next_token();
+  token=lexer_get_next_token();
   addTableDirectiveArgument(token->value);
-  if(token->code == TOKEN_ID) {
-    lexer_get_next_token();
+  if(token->type == TOKEN_ID) {
+    token=lexer_get_next_token();
   }
 }
 
 void type() {
-  for (CODE_LEX code = TOKEN_NUM; code <= TOKEN_JSON; code++) {
-    if (token->code == code) {
-      addColumnType(code);
-      if (code == TOKEN_VCNNN) addVCLength(token->value);
-      lexer_get_next_token();
+  for (Type type = TOKEN_NUM; type <= TOKEN_JSON; type++) {
+    if (token->type == type) {
+      addColumnType(type);
+      if (type == TOKEN_VCNNN) addVCLength(token->value);
+      token=lexer_get_next_token();
       break;
     }
   }
 }
 
 void constraint() {
-  addColumnDirective(token->code);
-  switch (token->code) {
+  addColumnDirective(token->type);
+  switch (token->type) {
     case TOKEN_PK:
      test_symbole(TOKEN_PK);
      break;
@@ -144,7 +143,14 @@ void constraint() {
     case TOKEN_UNIQUE:
      test_symbole(TOKEN_UNIQUE);
      break;
+    case TOKEN_COMMENT:
+      comment();
+      break;
+    default :
+      return;
   }
+  constraint();
+
 }
 
 void fk_constraint() {
@@ -156,17 +162,27 @@ void fk_constraint() {
 void check_constraint() {
   test_symbole(TOKEN_CHECK);
   addColumnDirectiveArgument(token->value);
-  test_symbole(TOKEN_VALUE);
-  while(token->code == TOKEN_COMMA) {
-    lexer_get_next_token();
-    addColumnDirectiveArgument(token->value);
-    test_symbole(TOKEN_VALUE);
+  if(token->type==TOKEN_STRING){
+    test_symbole(TOKEN_STRING);
+    while(token->type == TOKEN_COMMA) {
+      token=lexer_get_next_token();
+      addColumnDirectiveArgument(token->value);
+      test_symbole(TOKEN_STRING);
+    }
+  }else{
+    test_symbole(TOKEN_NUMBER);
+    while(token->type == TOKEN_COMMA) {
+      token=lexer_get_next_token();
+      addColumnDirectiveArgument(token->value);
+      test_symbole(TOKEN_NUMBER);
+    }
   }
+  
 }
 
 void between_constraint(){
   test_symbole(TOKEN_BETWEEN);
-  switch (token->code)
+  switch (token->type)
   {
   case TOKEN_NUMBER:{
     addColumnDirectiveArgument(token->value);
@@ -182,30 +198,22 @@ void between_constraint(){
     test_symbole(TOKEN_STRING);
     }
     break;
-  default:
-    error(TOKEN_VALUE);
-    break;
+  // default:
+  //   error(TOKEN_VALUE);
+  //   break;
   }
 }
 
 void default_constraint() {
   test_symbole(TOKEN_DEFAULT);
   addColumnDirectiveArgument(token->value);
-  test_symbole(TOKEN_VALUE);
+  if(token->type==TOKEN_NUMBER)
+    test_symbole(TOKEN_NUMBER);
+  else
+    test_symbole(TOKEN_STRING);
+    
 }
-
 void comment() {
-  if (token->code == TOKEN_DOUBLE_HYPHEN) {
-    inComment = TRUE;
-    test_symbole(TOKEN_DOUBLE_HYPHEN);
-    test_symbole(TOKEN_COMMENT);
-    test_symbole(TOKEN_NL);
-    inComment = FALSE;
-  } else if (token->code == TOKEN_OPN_BRCKT) {
-    inComment = TRUE;
-    test_symbole(TOKEN_OPN_BRCKT);
-    test_symbole(TOKEN_COMMENT);
-    test_symbole(TOKEN_CLS_BRCKT);
-    inComment = FALSE;
-  }
+  addComment(token->value);
+  token=lexer_get_next_token();
 }

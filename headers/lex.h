@@ -4,62 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 
-typedef enum
-{
-	// valid table, view,comlumn name
-	TOKEN_ID,
-	TOKEN_NL,
-	TOKEN_VIEW,
-	TOKEN_TD_SELECT,
-	TOKEN_TD_COLPREFIX,
-	TOKEN_NUM,
-	TOKEN_INT,
-	TOKEN_D,
-	TOKEN_TS,
-	TOKEN_TSTZ,
-	TOKEN_VC,
-	TOKEN_VCNNN,
-	TOKEN_CLOB,
-	TOKEN_BLOB,
-	TOKEN_JSON,
-	TOKEN_PK,
-	TOKEN_FK,
-	TOKEN_CHECK,
-	TOKEN_NN,
-	TOKEN_BETWEEN,
-	TOKEN_INDEX,
-	TOKEN_DEFAULT,
-	TOKEN_UNIQUE,
-	// string between '' quotes
-	TOKEN_STRING,
-	// litteral number: 344,4 ,56 hhhhh
-	TOKEN_NUMBER,
-	TOKEN_COMMENT,
-	TOKEN_COMMA,
-	TOKEN_EOF,
-	TOKEN_ERR,
-	TOKEN_WHITESPACE
-} Type;
-typedef struct
-{
-	Type type;
-	char *value;
-} Token;
-
-typedef struct
-{
-	char c;
-
-} Lexer;
-Lexer *lexer;
-Token *token;
-Token *Putback_token;
-FILE *inputFile;
-extern int Lines ;
-extern int Columns ;
-int Putback;
-Token **tokens;
+extern char *token_str[];
 // prototypes
 void skip_whitespace();
 void get_next_cat();
@@ -69,8 +16,16 @@ Token *token_init(int type, char *value);
 char *lexer_get_caracter_as_string();
 void lexer_putback();
 char *lexer_get_string();
-Token *lexer_get_next_token();
-void lexer_scan_file();
+char* lexer_get_string_token();
+int isVCNNN(char * value);
+char* lexer_get_number();
+char * lexer_get_id();
+void lexer_token_putback(Token * token);
+void init_tab_token();
+char* lexer_get_comment_1();
+char* lexer_get_comment_2();
+Token* lexer_get_next_token();
+Token * lexer_scan_file();
 void skip_whitespace();
 
 #endif

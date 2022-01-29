@@ -6,10 +6,9 @@
 // tableau des erreurs:
 extern char* erreurs[];
 
-
-void test_symbole(CODE_LEX code);
-void error(Error erreur);
-
+void test_symbole(Type type);
+void error(Type expectedToken,Type foundToken);
+void parse();
 void program();
 void view();
 void table();
@@ -23,7 +22,6 @@ void check_constraint();
 void between_constraint();
 void default_constraint();
 void comment();
-
 
 
 #endif // PARSER

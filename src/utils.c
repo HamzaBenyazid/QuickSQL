@@ -1,3 +1,4 @@
+#include<math.h>
 #include"../headers/utils.h"
 
 int numberOfTables;
@@ -11,7 +12,7 @@ void initTablesAndViewsAndIndexes(){
     indexes = malloc(MAX_INDEXES_SIZE*sizeof(Index));
     numberOfIndexes=0;
 }
-void freeTablesAndViews(){
+void freeTablesAndViewsAndIndexes(){
     for(int i=0;i<numberOfTables;i++){
         free(tables[i].columns);
     }
@@ -20,6 +21,7 @@ void freeTablesAndViews(){
         free(views[i].tableNames);
     }
     free(views);
+    free(indexes);
 }
 void addTableName(char* tableName){
     checkNameLength(tableName);
@@ -32,6 +34,7 @@ void addTableName(char* tableName){
     table.columns = malloc(MAX_COL_SIZE*sizeof(Column));
     table.numberOfColumns=0;
     table.numberOfTD=0;
+    table.comment=NULL;
     *(tables+numberOfTables)=table;
     numberOfTables++;
 }
@@ -71,6 +74,7 @@ void addColumnName(char* columnName){
     strcpy(column.name,columnName);
     column.numberOfCD=0;
     column.type=-1;
+    column.comment=NULL;
     //saving
     *(table.columns+numberOfColumns)=column;
     table.numberOfColumns++;
@@ -170,7 +174,21 @@ void addIndex(){
     indexes[numberOfIndexes]=index;
     numberOfIndexes++;
 }
-
+void addComment(char* comment){
+    if(numberOfTables!=0){
+        Table table = tables[numberOfTables-1];
+        if(table.numberOfColumns!=0){
+            Column column = table.columns[table.numberOfColumns-1];
+            column.comment=(char*)malloc(strlen(comment)*sizeof(char));
+            strcpy(column.comment,comment);
+            table.columns[table.numberOfColumns-1]=column;
+        }else{
+            table.comment=(char*)malloc(strlen(comment)*sizeof(char));
+            strcpy(table.comment,comment);
+        }
+        tables[numberOfTables-1]=table;
+    }
+}
 ColumnType mapCodeLexToColumnType(Type token){
     return (ColumnType)(token-TOKEN_NUM);
 }
@@ -189,6 +207,51 @@ int a2i(char* s){
     s++;   
   }
   return num*sign;
+}
+char* i2a(int num, char* buffer, int base) {
+    int curr = 0;
+ 
+    if (num == 0) {
+        // Base case
+        buffer[curr++] = '0';
+        buffer[curr] = '\0';
+        return buffer;
+    }
+ 
+    int num_digits = 0;
+ 
+    if (num < 0) {
+        if (base == 10) {
+            num_digits ++;
+            buffer[curr] = '-';
+            curr ++;
+            // Make it positive and finally add the minus sign
+            num *= -1;
+        }
+        else
+            // Unsupported base. Return NULL
+            return NULL;
+    }
+ 
+    num_digits += (int)floor(log(num) / log(base)) + 1;
+ 
+    // Go through the digits one by one
+    // from left to right
+    while (curr < num_digits) {
+        // Get the base value. For example, 10^2 = 1000, for the third digit
+        int base_val = (int) pow(base, num_digits-1-curr);
+ 
+        // Get the numerical value
+        int num_val = num / base_val;
+ 
+        char value = num_val + '0';
+        buffer[curr] = value;
+ 
+        curr ++;
+        num -= base_val * num_val;
+    }
+    buffer[curr] = '\0';
+    return buffer;
 }
 Table getTable(char* name){
     Table table;

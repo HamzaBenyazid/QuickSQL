@@ -11,6 +11,65 @@
 #define MAX_CD_ARGS 10
 #define MAX_VIEW_TABS 10
 
+#include <stdio.h>
+#include<stdlib.h>
+#include<math.h>
+
+typedef enum
+{
+	// valid table, view,comlumn name
+	TOKEN_ID,
+	TOKEN_NL,
+	TOKEN_VIEW,
+	TOKEN_TD_SELECT,
+	TOKEN_TD_COLPREFIX,
+	TOKEN_NUM,
+	TOKEN_INT,
+	TOKEN_D,
+	TOKEN_TS,
+	TOKEN_TSTZ,
+	TOKEN_VC,
+	TOKEN_VCNNN,
+	TOKEN_CLOB,
+	TOKEN_BLOB,
+	TOKEN_JSON,
+	TOKEN_PK,
+	TOKEN_FK,
+	TOKEN_CHECK,
+	TOKEN_NN,
+	TOKEN_BETWEEN,
+	TOKEN_INDEX,
+	TOKEN_DEFAULT,
+	TOKEN_UNIQUE,
+	// string between '' quotes
+	TOKEN_STRING,
+	// litteral number: 344,4 ,56 hhhhh
+	TOKEN_NUMBER,
+	TOKEN_COMMENT,
+	TOKEN_COMMA,
+	TOKEN_EOF,
+	TOKEN_ERR,
+	TOKEN_WHITESPACE
+} Type;
+typedef struct
+{
+	Type type;
+	char *value;
+} Token;
+
+typedef struct
+{
+	char c;
+
+} Lexer;
+Lexer *lexer;
+Token *token;
+Token *Putback_token;
+FILE *inputFile;
+extern int Lines ;
+extern int Columns ;
+int Putback;
+Token **tokens;
 
 typedef enum {
     PK_TOKEN,
@@ -53,6 +112,7 @@ typedef struct{
     int vcnnn;
     ColumnDirective columnDirectives[MAX_NUM_CD];
     int numberOfCD; //number of column directives
+    char* comment;
 } Column;
 
 typedef struct{
@@ -66,6 +126,7 @@ typedef struct{
     int numberOfTD;
     Column* columns;
     int numberOfColumns;
+    char* comment;
 }Table;
 
 typedef struct{

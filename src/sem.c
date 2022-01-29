@@ -67,7 +67,7 @@ void checkColumnDirectives(){
             column = table.columns[j];
             numberOfCD= column.numberOfCD;
             for(k=0;k<numberOfCD;k++){
-                for(l=k+1;k<numberOfCD;l++){
+                for(l=k+1;l<numberOfCD;l++){
                     if(column.columnDirectives[k].token==column.columnDirectives[l].token){
                         printf("\nSemantic error : column directive must not be used more than one time in a column\n");
                         exit(EXIT_FAILURE);
