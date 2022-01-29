@@ -304,7 +304,7 @@ Token *lexer_get_next_token()
 
 			else
 			{
-				printf("ERROR: Invalid Token\n");
+				printf("ERROR at line %d, column %d : Invalid Token\n",Lines,Columns);
 				exit(1);
 			}
 		}
@@ -336,7 +336,7 @@ Token *lexer_get_next_token()
 				return token_init(TOKEN_PK, slash);
 			else
 			{
-				printf("ERROR: Invalid Token\n");
+				printf("ERROR at line %d, column %d : Invalid Token\n",Lines,Columns);
 				exit(1);
 			}
 		}
@@ -385,13 +385,13 @@ Token *lexer_get_next_token()
 				char *string = lexer_get_string_token();
 				if (Putback == EOF)
 				{
-					printf("ERROR: Invalid Token\n");
+					printf("ERROR at line %d, column %d : Invalid Token\n",Lines,Columns);
 					exit(1);
 				}
 				return token_init(TOKEN_STRING, string);
 			}
 		}
-		printf("ERROR: Invalid Token\n");
+		printf("ERROR at line %d, column %d : Invalid Token\n",Lines,Columns);
 		exit(1);
 	}
 	}
