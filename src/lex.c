@@ -357,7 +357,7 @@ Token *lexer_get_next_token()
 				char *value = lexer_get_id();
 				if (strcmp(value, "int") == 0)
 					return token_init(TOKEN_INT, value);
-				if (strcmp(value, "number") == 0)
+				if (strcmp(value, "num") == 0)
 					return token_init(TOKEN_NUMBER, value);
 				if (strcmp(value, "d") == 0)
 					return token_init(TOKEN_D, value);
