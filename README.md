@@ -30,8 +30,8 @@ To compile and Run:
 For example : `./quicksql inputFile.txt output` , this command will generate `output.sql` containing SQL code.
 
 * **In Windows :**
-1. Change the first line of the file `Makefile` to `OS	:= Windows_NT`
-2. Run command `make` in the folder which contains the `Makefile` to create the binary file.
+1. Change the first line of the file `makefile` to `OS	:= Windows_NT`
+2. Run command `make` in the folder which contains the `makefile` to create the binary file.
 3. Then, you can run the compiler with the command :`./quicksql.exe inputfile output_file_name`
 
 
