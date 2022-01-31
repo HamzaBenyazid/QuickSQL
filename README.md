@@ -1,7 +1,7 @@
 <h1 align="center">QuickSQL compiler</h1>
 
 <h4 align="center">
- "QuickSQL" A simple language for generating SQL scripts using a simplified and intuitive syntax.
+ "QuickSQL" Un langage simple pour générer des scripts SQL à l'aide d'une syntaxe simplifiée et intuitive.
 <br>
 Made during second year of engineering school.
 </h4>
@@ -10,29 +10,29 @@ Made during second year of engineering school.
     <img src="https://i.imgur.com/otIz6Hu.png" alt="screenshot">
 </p>
 
-## Some Features
+## Quelques caractéristiques
 
-* Simple syntax.
-* Simple to use.
-* Gives you a lot of infos about your errors to help you fix them. 
-* Fast compilation.
+* Syntaxe simple.
+* Simple à utiliser.
+* Vous donne beaucoup d'informations sur vos erreurs pour vous aider à les corriger. 
+* Compilation rapide.
 
 ## Installation
 
-You must have installed **Make** and **GCC** on your computer to compile the program.
+Vous devez avoir installé **Make** et **GCC** sur votre ordinateur pour compiler le programme.
 
-To compile and Run:
-* **In Linux :**
+Pour compiler et exécuter :
+* **Sous Linux et Mac :**
 
-1. Run command `make` in the folder which contains the `Makefile` to create the binary file.
-2. Then, you can run the compiler with the command :`./quicksql inputfile output_file_name`
+1. Exécutez la commande `make` dans le dossier qui contient le `Makefile` pour créer le fichier binaire.
+2. Ensuite, vous pouvez lancer le compilateur avec la commande :`./quicksql inputfile output_file_name`
 
-For example : `./quicksql inputFile.txt output` , this command will generate `output.sql` containing SQL code.
+Par exemple : `./quicksql inputFile.txt output` , cette commande va générer `output.sql` contenant du code SQL.
 
-* **In Windows :**
-1. Change the first line of the file `makefile` to `OS	:= Windows_NT`
-2. Run command `make` in the folder which contains the `makefile` to create the binary file.
-3. Then, you can run the compiler with the command :`./quicksql.exe inputfile output_file_name`
+* **Sous Windows :**
+1. Changez la première ligne du fichier `makefile` en `OS := Windows_NT`
+2. Exécutez la commande `make` dans le repertoire qui contient le `makefile` pour créer le fichier binaire.
+3. Ensuite, vous pouvez lancer le compilateur avec la commande :`./quicksql.exe fichier d'entrée nom_du_fichier_de_sortie`.
 
 
-For example : `./quicksql.exe inputFile.txt output` , this command will generate `output.sql` containing SQL code.
+Par exemple : `./quicksql.exe inputFile.txt output` , cette commande va générer `output.sql` contenant du code SQL.
