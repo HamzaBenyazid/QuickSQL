@@ -21,8 +21,18 @@ Made during second year of engineering school.
 
 You must have installed **Make** and **GCC** on your computer to compile the program.
 
+To compile and Run:
+* **In Linux :**
+
 1. Run command `make` in the folder which contains the `Makefile` to create the binary file.
 2. Then, you can run the compiler with the command :`./quicksql inputfile output_file_name`
 
 For example : `./quicksql inputFile.txt output` , this command will generate `output.sql` containing SQL code.
 
+* **In Windows :**
+1. Change the first line of the file `Makefile` to `OS	:= Windows_NT`
+2. Run command `make` in the folder which contains the `Makefile` to create the binary file.
+3. Then, you can run the compiler with the command :`./quicksql.exe inputfile output_file_name`
+
+
+For example : `./quicksql.exe inputFile.txt output` , this command will generate `output.sql` containing SQL code.
