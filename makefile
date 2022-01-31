@@ -1,4 +1,4 @@
-OS	:= Windows_NT
+OS	:= 
 
 ifeq ($(OS),Windows_NT)
 EXECUTABLE	:= quicksql.exe
