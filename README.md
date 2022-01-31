@@ -1,4 +1,4 @@
-<h1 align="center">QuickSQL compiler</h1>
+<h1 align="center">QuickSQL compilateur</h1>
 
 <h4 align="center">
  "QuickSQL" Un langage simple pour générer des scripts SQL à l'aide d'une syntaxe simplifiée et intuitive.
