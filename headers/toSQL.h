@@ -23,6 +23,9 @@ void generateConstraints(char* tableName,Column column);
 void generateConstraint(char* tableName,char* columnName,ColumnDirective columnDirective);
 void generateColumnsComment(Table table,int hasTableComment);
 void generateTableComment(Table table);
+int colPrefixTDIndex(Table table);
+Table addColPrefix(Table table,int index);
+
 int hasPrimaryKey(Table table);
 int isPrimaryKey(Column column);
 int isForeightKey(Column column);

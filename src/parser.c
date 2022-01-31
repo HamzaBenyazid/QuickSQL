@@ -73,12 +73,13 @@ void table() {
 }
 
 void table_directives() {
-  addTableDirective(token->type);
   switch (token->type) {
     case TOKEN_TD_COLPREFIX:
+      addTableDirective(token->type);
       colprefix_directive();
       break;
     case TOKEN_TD_SELECT:
+      addTableDirective(token->type);
       test_symbole(TOKEN_TD_SELECT);
       break;
   }

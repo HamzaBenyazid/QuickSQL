@@ -49,17 +49,18 @@ void addTableDirective(Type tableDirectivetoken){
         printf("Warning : this is not a table directive token");
     }
     int numberOfTD = table.numberOfTD;
-    *(table.tableDirectives+numberOfTD)=tableDirective;
     table.numberOfTD++;
-    *(tables+numberOfTables-1) = table;
+    *(table.tableDirectives+numberOfTD)=tableDirective;
+    tables[numberOfTables-1] = table;
 }
 void addTableDirectiveArgument(char* argument){
     Table table = *(tables+numberOfTables-1);
-    TableDirective tableDirective;
-    strcpy(tableDirective.argument,argument);
     int numberOfTD = table.numberOfTD;
-    *(table.tableDirectives+numberOfTD)=tableDirective;
-    *(tables+numberOfTables-1) = table;
+    TableDirective tableDirective=table.tableDirectives[numberOfTD-1];
+    tableDirective.argument=malloc(strlen(argument));
+    strcpy(tableDirective.argument,argument);
+    table.tableDirectives[numberOfTD-1]=tableDirective;
+    tables[numberOfTables-1] = table;
 }
 void addColumnName(char* columnName){
     checkNameLength(columnName);

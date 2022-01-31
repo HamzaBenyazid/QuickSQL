@@ -65,6 +65,9 @@ void generateTable(Table table){
     putString("create table ");
     putString(table.name);
     putString(" (\n");
+    int index;
+    if((index=colPrefixTDIndex(table))!=-1)
+        table = addColPrefix(table,index);
     generateColumns(table);
     putString(")\n;\n\n");
 
@@ -75,7 +78,25 @@ void generateTable(Table table){
         generateColumnsComment(table,0);
     }
 }
-
+int colPrefixTDIndex(Table table){
+    TableDirective tableDirective;
+    for(int i=0;i<table.numberOfTD;i++){
+        tableDirective = table.tableDirectives[i];
+        if(tableDirective.token==COLPREFIX_TOKEN)
+            return i;
+    }
+    return -1;
+}
+Table addColPrefix(Table table,int index){
+    char columnName[MAX_NAME_LEN];
+    for(int i=0;i<table.numberOfColumns;i++){
+        strcpy(columnName,table.columns[i].name);
+        strcpy(table.columns[i].name,table.tableDirectives[index].argument);
+        strcat(table.columns[i].name,"_");
+        strcat(table.columns[i].name,columnName);
+    }
+    return table;
+}
 void generateColumns(Table table){
     Column column;
     int isLastCol;
