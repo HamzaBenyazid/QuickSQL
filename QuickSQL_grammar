@@ -1,4 +1,4 @@
-program : (view | table) { view | table }
+program : (view | table | new_line | comment | eps) { view | table | new_line | comment | eps }
 table : ID table_directives {table_directives} new_line column { column }
 view : "view" ID ID {ID} new_line
 table_directives : colprefix_directive | select_directive | eps
