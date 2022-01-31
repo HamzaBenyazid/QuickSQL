@@ -19,7 +19,10 @@
         "limits": "c",
         "new": "c",
         "stdexcept": "c",
-        "streambuf": "c"
+        "streambuf": "c",
+        "atomic": "c",
+        "cmath": "c",
+        "unordered_map": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

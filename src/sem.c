@@ -2,10 +2,15 @@
 #include "../headers/utils.h"
 
 void sem(){
+    //Rule 1
     checkTableNamesDeclarations();
+    //Rule 2
     checkColumnNamesDeclarations();
+    //Rule 3
     checkTableDirectives();
+    //Rule 4
     checkColumnDirectives();
+    //Rule 6
     checkViewsTables();
 }
 

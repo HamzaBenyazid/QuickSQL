@@ -80,7 +80,7 @@ void generateColumns(Table table){
     Column column;
     int isLastCol;
     if(!hasPrimaryKey(table))
-        generateColumn(table.name,(Column){"id",-1,0,{PK_TOKEN},1},0);
+        generateColumn(table.name,(Column){"id",-1,0,{PK_TOKEN},2,NULL},0);
     for(int i=0;i<table.numberOfColumns;i++){
         column = table.columns[i];
 

@@ -90,7 +90,9 @@ void addColumnType(Type type){
     table.columns[numberOfColumns-1]=column;
     tables[numberOfTables-1]=table;
 }
-void addVCLength(char* length){
+void addVCLength(char* value){
+    char* length=malloc(strlen(value)-2);
+    length=strcpy(length,value+2);
     Table table=tables[numberOfTables-1];
     int numberOfColumns=table.numberOfColumns;
     Column column=table.columns[numberOfColumns-1];
@@ -110,9 +112,9 @@ void addColumnDirective(Type columnDirective){
     directive.numberOfArgs=0;
     int numberOfCD=column.numberOfCD;
     *(column.columnDirectives+numberOfCD)=directive;
-    column.numberOfCD++;
-    *(table.columns+numberOfColumns-1)=column;
-    *(tables+numberOfTables-1)=table;
+    column.numberOfCD=numberOfCD+1;
+    table.columns[numberOfColumns-1]=column;
+    tables[numberOfTables-1]=table;
 }
 void addColumnDirectiveArgument(char* argument){
     Table table = *(tables+numberOfTables-1);

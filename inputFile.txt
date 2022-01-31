@@ -1,15 +1,19 @@
-etudiant /select --etudiant 
-    nom
-    prenom
-    DDN d [date de naissance] /index
-    filiere /fk filiere
+--Création de table Departement
+Departement
+  name vc20 /check 'IT','Finance','Accounting'
+
+--Création de la table Employee
+Employee /select
+   name vc20 
+   CIN vc10 /unique --numéro de la carte d'identité nationale 
+   hireDate d 
+   salary int
+   departement_id /fk Departement
+
+--Création de la table Project
+Project 
+  description vc200
+  Employee_id /fk Employee
 
 
-
-filiere
-    nom /check 'GL','IWIM','BI'
-    nombre_des_etudiants int
-view v1 etudiant filiere
-
-
-
+view V1 Employee Departement

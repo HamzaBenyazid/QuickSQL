@@ -33,7 +33,7 @@ void error(Type expectedToken,Type foundToken) {
 }
 
 void program() {
-  while(token->type==TOKEN_NL) token=lexer_get_next_token();
+  while(token->type==TOKEN_NL || token->type==TOKEN_COMMENT) token=lexer_get_next_token();
   if (token->type == TOKEN_ID) {
     table();
     program();
@@ -118,35 +118,43 @@ void type() {
 }
 
 void constraint() {
-  addColumnDirective(token->type);
+  if(token->type==TOKEN_COMMENT){
+    comment();
+    return constraint();
+  }
   switch (token->type) {
     case TOKEN_PK:
+     addColumnDirective(token->type);
      test_symbole(TOKEN_PK);
      break;
     case TOKEN_FK:
+     addColumnDirective(token->type);
      fk_constraint();
      break;
     case TOKEN_CHECK:
+     addColumnDirective(token->type);
      check_constraint();
      break;
     case TOKEN_NN:
+     addColumnDirective(token->type);
      test_symbole(TOKEN_NN);
      break;
     case TOKEN_BETWEEN:
+     addColumnDirective(token->type);
      between_constraint();
      break;
     case TOKEN_INDEX:
+     addColumnDirective(token->type);
      test_symbole(TOKEN_INDEX);
      break;
     case TOKEN_DEFAULT:
+     addColumnDirective(token->type);
      default_constraint();
      break;
     case TOKEN_UNIQUE:
+     addColumnDirective(token->type);
      test_symbole(TOKEN_UNIQUE);
      break;
-    case TOKEN_COMMENT:
-      comment();
-      break;
     default :
       return;
   }

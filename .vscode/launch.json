@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/lex",
+            "program": "${workspaceFolder}/quicksql",
             "args": ["${workspaceFolder}/inputFile.txt","output"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
